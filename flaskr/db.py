@@ -26,7 +26,7 @@ def init_db():
     db = get_db()
 
     with current_app.open_resource('schema.sql') as f:
-        db.execurescript(f.read().decode('utf8'))
+        db.executescript(f.read().decode('utf8'))
 
 
 @click.command('init-db')
@@ -35,3 +35,8 @@ def init_db_command():
     # Limpe os dados existentes e crie novas tabelas
     init_db()
     click.echo('Initialized the database.')
+
+
+def init_app(app):
+    app.teardown_appcontext(close_db)
+    app.cli.add_command(init_db_command)
